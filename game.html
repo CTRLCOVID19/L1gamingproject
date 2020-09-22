@@ -17,7 +17,7 @@
         // player variables 
         var playerXpos = 60;
         var playerYpos = 30;
-        const PLAYERSIZE = 100;
+        const PLAYERSIZE = 25;
         var playerXspeed = 15;
         var playerYspeed = 15;
 
@@ -39,7 +39,7 @@
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
-        
+
             playerMove();
         }
 
@@ -74,16 +74,16 @@
         }
 
         function playerMove() {
-            if (upKeyPressed) {
+            if (upKeyPressed && playerYpos > 0) {
                 playerYpos -= playerYspeed;
             }
-            if (rightKeyPressed) {
+            if (rightKeyPressed && playerXpos + PLAYERSIZE < canvas.width) {
                 playerXpos += playerXspeed;
             }
-            if (downKeyPressed) {
+            if (downKeyPressed && playerYpos + PLAYERSIZE < canvas.height) {
                 playerYpos += playerYspeed;
             }
-            if (leftKeyPressed) {
+            if (leftKeyPressed && playerXpos > 0) {
                 playerXpos -= playerXspeed;
             }
         }
