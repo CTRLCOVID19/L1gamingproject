@@ -18,8 +18,8 @@
         var playerXpos = 60;
         var playerYpos = 30;
         const PLAYERSIZE = 25;
-        var playerXspeed = 15;
-        var playerYspeed = 15;
+        var playerXspeed = 5;
+        var playerYspeed = 5;
 
         // key vars
         var upKeyPressed = false;
@@ -32,14 +32,20 @@
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
 
+        var blockXpos = 100;
+        var blockYpos = 100;
+        var BLOCK_SIZE = 50;
 
         var player = new Image();
         player.src = 'player.png';
+        var background = new Image();
+        background.src = '';
 
+        // function 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
-
+            colorRect(blockXpos, blockYpos, BLOCK_SIZE, BLOCK_SIZE, 'blue');
             playerMove();
         }
 
@@ -74,17 +80,49 @@
         }
 
         function playerMove() {
+
             if (upKeyPressed && playerYpos > 0) {
-                playerYpos -= playerYspeed;
+                collision();
+                if (hit) {
+                    playerYpos += playerYspeed;
+                } else {
+                    playerYpos -= playerYspeed;
+                }
             }
             if (rightKeyPressed && playerXpos + PLAYERSIZE < canvas.width) {
-                playerXpos += playerXspeed;
+                collision();
+                if (hit) {
+                    playerXpos -= playerXspeed;
+                } else {
+                    playerXpos += playerXspeed;
+                }
             }
             if (downKeyPressed && playerYpos + PLAYERSIZE < canvas.height) {
-                playerYpos += playerYspeed;
+                collision();
+                if (hit) {
+                    playerYpos -= playerYspeed;
+                } else {
+                    playerYpos += playerYspeed;
+                }
             }
             if (leftKeyPressed && playerXpos > 0) {
-                playerXpos -= playerXspeed;
+                collision();
+                if (hit) {
+                    playerXpos += playerXspeed;
+                } else {
+                    playerXpos -= playerXspeed;
+                }
+            }
+        }
+
+        var hit = false;
+
+        function collision() {
+            if (playerXpos + PLAYERSIZE >= blockXpos && playerXpos <= blockXpos + BLOCK_SIZE &&
+                playerYpos + PLAYERSIZE >= blockYpos && playerYpos <= blockYpos + BLOCK_SIZE) {
+                hit = true;
+            } else {
+                hit = false;
             }
         }
 
