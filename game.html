@@ -12,9 +12,35 @@
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
 
+            for(var i =0; i < totalObjects; i++){
+                makeObjects();
+            }
+            
             setInterval(mainloop, 1000 / 50);
         }
         // player variables 
+        var userName = '';
+
+        while (userName == '' || userName == null) {
+            userName = prompt('what is your name?')
+        }
+
+        var difficulty = '';
+
+        while (difficulty != 'easy' && difficulty != 'hard') {
+            difficulty = prompt('how hard do you want it easy or hard', 'easy');
+        } //loop ends
+
+
+        // speed func
+        if (difficulty == 'easy') {
+            gameSpeed = 10;
+        } else {
+            gameSpeed = 20;
+        } //speed func ends
+
+
+        // player vars
         var playerXpos = 60;
         var playerYpos = 30;
         const PLAYERSIZE = 25;
@@ -31,35 +57,42 @@
         const DOWN_KEY = 40;
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
-
+        // block var
         var blockXpos = 100;
         var blockYpos = 100;
         var BLOCK_SIZE = 50;
-
+        // block var ends
+        // game var
         var player = new Image();
         player.src = 'player.png';
         var background = new Image();
         background.src = '';
+        //game var ends
+        var objects = [];
+        var totalObjects = 10;
 
         // function 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
-            colorRect(blockXpos, blockYpos, BLOCK_SIZE, BLOCK_SIZE, 'blue');
+//            colorRect(blockXpos, blockYpos, BLOCK_SIZE, BLOCK_SIZE, 'blue');
             playerMove();
-        }
+            
+            drawObjects();
+            moveObjects();
+        } // end func
 
         function keyPressed(evt) {
-            if (evt.keyCode == UP_KEY) {
+            if (evt.keyCode == UP_KEY) { // move up
                 upKeyPressed = true;
             }
-            if (evt.keyCode == DOWN_KEY) {
+            if (evt.keyCode == DOWN_KEY) { // move down
                 downKeyPressed = true;
             }
-            if (evt.keyCode == LEFT_KEY) {
+            if (evt.keyCode == LEFT_KEY) { // move left
                 leftKeyPressed = true;
             }
-            if (evt.keyCode == RIGHT_KEY) {
+            if (evt.keyCode == RIGHT_KEY) { // move right
                 rightKeyPressed = true;
             }
         } // end func
@@ -78,13 +111,14 @@
                 rightKeyPressed = false;
             }
         }
-
+        // player function
         function playerMove() {
 
             if (upKeyPressed && playerYpos > 0) {
                 collision();
                 if (hit) {
-                    playerYpos += playerYspeed;
+                    playerYpos = 0;
+                    playerXpos = 0;
                 } else {
                     playerYpos -= playerYspeed;
                 }
@@ -92,7 +126,8 @@
             if (rightKeyPressed && playerXpos + PLAYERSIZE < canvas.width) {
                 collision();
                 if (hit) {
-                    playerXpos -= playerXspeed;
+                    playerYpos = 0;
+                    playerXpos = 0;
                 } else {
                     playerXpos += playerXspeed;
                 }
@@ -100,7 +135,8 @@
             if (downKeyPressed && playerYpos + PLAYERSIZE < canvas.height) {
                 collision();
                 if (hit) {
-                    playerYpos -= playerYspeed;
+                    playerYpos = 0;
+                    playerXpos = 0;
                 } else {
                     playerYpos += playerYspeed;
                 }
@@ -108,11 +144,49 @@
             if (leftKeyPressed && playerXpos > 0) {
                 collision();
                 if (hit) {
-                    playerXpos += playerXspeed;
+                    playerYpos = 0;
+                    playerXpos = 0;
                 } else {
                     playerXpos -= playerXspeed;
                 }
             }
+        } 
+
+        function makeObjects() {
+            var size = Math.floor(Math.random()*(50 - 20)) + 20;
+            var oXpos = Math.floor(Math.random()*(canvas.width - size)) + size;
+            var oYpos = 0 - size;
+            var ySpeed = Math.floor(Math.random()* (20 - 5)) + 5;
+            
+            var object = {
+                oXpos:oXpos,
+                oYpos: oYpos,
+                size: size,
+                ySpeed: ySpeed
+            }
+            
+            objects.push(object);
+        }
+        
+        function drawObjects(){
+            objects.forEach(function(obj,i,array){
+                colorRect(obj.oXpos,obj.oYpos,obj.size,obj.size,'blue');
+            });
+        }
+        
+        function moveObjects(){
+            objects.forEach(function(obj,i,array){
+                obj.oYpos += obj.ySpeed;
+                
+                if(obj.oYpos > canvas.height){
+                    obj.oYpos = 0 - obj.size;
+                    oXpos = Math.floor(Math.random()*(canvas.width - size)) + size;
+                    ySpeed = Math.floor(Math.random()* (20 - 5)) + 5;
+                }
+                if(playerXpos + PLAYERSIZE > obj.oXpos && playerXpos < obj.oXpos + obj.size && playerYpos + PLAYERSIZE > obj.oYpos && playerYpos < obj.oYpos + obj.size){
+                   playerYpos = canvas.height - PLAYERSIZE;
+                }
+            });
         }
 
         var hit = false;
@@ -133,7 +207,7 @@
 
         function drawImgs(src, x, y, w, h) {
             canvasContext.drawImage(src, x, y, w, h);
-        }
+        }// end func
 
     </script>
 </body>
