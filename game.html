@@ -71,7 +71,7 @@
         var objects = [];
         var totalObjects = 10;
 
-        // function 
+        // function loop 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
             drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
@@ -80,8 +80,9 @@
             
             drawObjects();
             moveObjects();
-        } // end func
-
+        } // loop end
+        
+         //func
         function keyPressed(evt) {
             if (evt.keyCode == UP_KEY) { // move up
                 upKeyPressed = true;
