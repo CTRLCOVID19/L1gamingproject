@@ -12,11 +12,11 @@
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
 
-            for(var i =0; i < totalObjects; i++){
+            for (var i = 0; i < totalObjects; i++) {
                 makeObjects();
             }
-            
-            setInterval(mainloop, 1000 / 50);
+
+            setInterval(mainloop,1000/50);
         }
         // player variables 
         var userName = '';
@@ -62,6 +62,7 @@
         var blockYpos = 100;
         var BLOCK_SIZE = 50;
         // block var ends
+
         // game var
         var player = new Image();
         player.src = 'player.png';
@@ -70,19 +71,21 @@
         //game var ends
         var objects = [];
         var totalObjects = 10;
+        var score = 0;
 
-        // function loop 
-        function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
-//            colorRect(blockXpos, blockYpos, BLOCK_SIZE, BLOCK_SIZE, 'blue');
-            playerMove();
-            
-            drawObjects();
-            moveObjects();
-        } // loop end
-        
-         //func
+            // function loop 
+            function mainloop() {
+                colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+                drawImgs(player, playerXpos, playerYpos, PLAYERSIZE, PLAYERSIZE);
+                // colorRect(blockXpos, blockYpos, BLOCK_SIZE, BLOCK_SIZE, 'blue');
+                drawText('score: ' + score, 20, 20, '20px Arial', 'red');
+                playerMove();
+
+                drawObjects();
+                moveObjects();
+            } // loop end
+
+        //func
         function keyPressed(evt) {
             if (evt.keyCode == UP_KEY) { // move up
                 upKeyPressed = true;
@@ -151,41 +154,44 @@
                     playerXpos -= playerXspeed;
                 }
             }
-        } 
+        }
 
         function makeObjects() {
-            var size = Math.floor(Math.random()*(50 - 20)) + 20;
-            var oXpos = Math.floor(Math.random()*(canvas.width - size)) + size;
+            var size = Math.floor(Math.random() * (50 - 20)) + 20;
+            var oXpos = Math.floor(Math.random() * (canvas.width - size));
             var oYpos = 0 - size;
-            var ySpeed = Math.floor(Math.random()* (20 - 5)) + 5;
-            
+            var ySpeed = Math.floor(Math.random() * (20 - 5)) + 5;
+
             var object = {
-                oXpos:oXpos,
+                oXpos: oXpos,
                 oYpos: oYpos,
                 size: size,
                 ySpeed: ySpeed
             }
-            
+
             objects.push(object);
         }
-        
-        function drawObjects(){
-            objects.forEach(function(obj,i,array){
-                colorRect(obj.oXpos,obj.oYpos,obj.size,obj.size,'blue');
+
+        function drawObjects() {
+            objects.forEach(function(obj, i, array) {
+                colorRect(obj.oXpos, obj.oYpos, obj.size, obj.size, 'blue');
             });
         }
-        
-        function moveObjects(){
-            objects.forEach(function(obj,i,array){
+
+        function moveObjects() {
+            objects.forEach(function(obj, i, array) {
                 obj.oYpos += obj.ySpeed;
-                
-                if(obj.oYpos > canvas.height){
+
+                if (obj.oYpos > canvas.height) {
                     obj.oYpos = 0 - obj.size;
-                    oXpos = Math.floor(Math.random()*(canvas.width - size)) + size;
-                    ySpeed = Math.floor(Math.random()* (20 - 5)) + 5;
+                    obj.oXpos = Math.floor(Math.random() * (canvas.width-obj.size));
+                    obj.ySpeed = Math.floor(Math.random() * (20 - 5)) + 5;
+                    score++;
+                    console.log(score)
                 }
-                if(playerXpos + PLAYERSIZE > obj.oXpos && playerXpos < obj.oXpos + obj.size && playerYpos + PLAYERSIZE > obj.oYpos && playerYpos < obj.oYpos + obj.size){
-                   playerYpos = canvas.height - PLAYERSIZE;
+                if (playerXpos + PLAYERSIZE > obj.oXpos && playerXpos < obj.oXpos + obj.size && playerYpos + PLAYERSIZE > obj.oYpos && playerYpos < obj.oYpos + obj.size) {
+                    playerYpos = canvas.height - PLAYERSIZE;
+                    score--;
                 }
             });
         }
@@ -206,9 +212,15 @@
             canvasContext.fillRect(x, y, w, h);
         }
 
+        function drawText(msg, x, y, f, c) {
+            canvasContext.font = f;
+            canvasContext.fillStyle = c;
+            canvasContext.fillText(msg , x, y);
+        }
+        
         function drawImgs(src, x, y, w, h) {
             canvasContext.drawImage(src, x, y, w, h);
-        }// end func
+        } // end func
 
     </script>
 </body>
